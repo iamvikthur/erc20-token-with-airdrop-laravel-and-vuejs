@@ -1,0 +1,48 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "watch": "npm run development -- --watch"
+    },
+    "devDependencies": {
+        "@popperjs/core": "^2.10.2",
+        "@vitejs/plugin-vue": "^3.0.1",
+        "axios": "^0.27",
+        "bootstrap": "^5.1.3",
+        "lodash": "^4.17.19",
+        "postcss": "^8.1.14",
+        "sass": "^1.32.11",
+        "sass-loader": "^12.6.0",
+        "vue": "^3.2.37",
+        "vue-cli-plugin-web3modal": "^1.1.0",
+        "vue-loader": "^17.0.0",
+        "truffle-plugin-verify": "^0.5.26"
+    },
+    "dependencies": {
+        "@coinbase/wallet-sdk": "^3.4.0",
+        "@toruslabs/torus-embed": "^1.27.2",
+        "@walletconnect/web3-provider": "^1.8.0",
+        "@web3auth/web3auth": "^1.1.4",
+        "babel-preset-es2015": "^6.24.1",
+        "fortmatic": "^2.4.0",
+        "laravel-mix": "^6.0.49",
+        "laravel-vite-plugin": "^0.5.3",
+        "node-polyfill-webpack-plugin": "^2.0.1",
+        "vite": "^3.0.4",
+        "vue-telegram-login": "^2.1.0",
+        "vue-template-compiler": "^2.7.8",
+        "vue3-telegram-login": "^0.0.4",
+        "vuex": "^4.0.2",
+        "web3": "^1.7.5",
+        "web3modal": "^1.9.8",
+        "web3modal-vue": "^1.0.5",
+        "web3modal-vue3": "^1.3.4",
+        "@openzeppelin/contracts": "^4.7.2",
+        "@truffle/hdwallet-provider": "^2.0.12",
+        "chai": "^4.3.6",
+        "chai-as-promised": "^7.1.1",
+        "chai-bn": "^0.3.1",
+        "dotenv": "^16.0.1"
+    }
+}
