@@ -54,7 +54,7 @@ export default {
 
     mounted(){
         // this.$store.dispatch('setReferrerAction', )
-        this.$store.dispatch('connectWalletAction', this.$attrs.referrer, this.referrer)
+        // this.$store.dispatch('connectWalletAction', this.$attrs.referrer, this.referrer)
     },
     computed: {
         ...mapGetters(['authUser'])
