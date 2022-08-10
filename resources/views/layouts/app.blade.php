@@ -71,7 +71,7 @@
                                         <div class="header-actions">
                                             <div class="nav-item d-none d-sm-none d-md-block">
                                                 <a class="font-weight-bolder" href="#" role="button">
-                                                    <span>Referred By: 0x04...8184</span> 
+                                                    {{-- <span>Referred By: 0x04...8184</span>  --}}
                                                 </a>
                                             </div>
 

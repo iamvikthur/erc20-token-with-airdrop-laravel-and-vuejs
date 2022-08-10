@@ -41,7 +41,7 @@
 
                     <div class="input-group justify-content-center">
                         <button v-if="!isConnected" @click="connectWallet()" class="btn btn-primary mt-3">Buy NGL</button>
-                        <button v-else class="btn btn-primary mt-3">Buy NGL</button>
+                        <button v-else @click="buyToken()" class="btn btn-primary mt-3">Buy NGL</button>
                     </div>
                 </div>
             </div> 
@@ -106,7 +106,7 @@ export default {
         return {
             nglprice: 0,
             bnb: null,
-            price: 10000
+            price: 100
         }
     },
     // mounted() { this.$store.dispatch('connectWalletAction') },
@@ -134,10 +134,33 @@ export default {
             let s = addr.substr(addr.length - 4, 4)
 
             return f+ "..." +s
+        },
+        buyToken(){
+            this.$store.dispatch('buyTokensAction', this.bnb)
         }
     },
     computed: {
-        ...mapGetters(['account', 'balance', 'network', 'isConnected'])
+        ...mapGetters(['account', 'balance', 'network', 'isConnected', 'transactionStatus'])
+    },
+    watch: {
+        transactionStatus(val){
+
+        console.log(val)
+
+        const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            padding: '2em'
+        });
+
+        toast({
+            type: 'success',
+            title: 'Transaction Submitted',
+            padding: '2em',
+        })
+        }
     }
 }
 </script>

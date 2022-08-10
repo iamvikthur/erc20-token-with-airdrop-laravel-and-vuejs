@@ -15,11 +15,17 @@ import Torus from "@toruslabs/torus-embed";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
 
-/**
- * Next, we will create a fresh Vue application instance. You may then begin
- * registering components with the application instance so they are ready
- * to use in your application's views. An example is included for you.
- */
+import NGLTOKEN from '../../build/contracts/NGL.json';
+import NGLSALE from '../../build/contracts/NGLSALE.json';
+import NGLADDRLOCK from '../../build/contracts/NGLADDRESSLOCK.json'
+
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
+// import VueSweetalert2 from 'vue-sweetalert2';
+// import 'sweetalert2/dist/sweetalert2.min.css';
+
+
 
 const app = createApp({});
 
@@ -46,6 +52,7 @@ app.component('index-component', Index);
 
 
 // Create a new store instance.
+const baseUrl = window.location.origin
 const store = createStore({
     state () {
       return {
@@ -53,10 +60,23 @@ const store = createStore({
         account: null,
         balance: null,
         network: null,
-        isConnected: false
+        isConnected: false,
+        web3: null,
+        authUser: {},
+        transactionStatus: ''
       }
     },
     actions: {
+        async authUserAction({commit}, obj){
+            const fd = {
+                bep20_address: obj.account[0],
+                referrer: obj.referrer
+            }
+            const res = await axios.post(`${baseUrl}/auth_user/`, fd)
+            const data = await res.data;
+            console.log("this is the user data", data);
+            commit('setAuthUser', data)
+        },
         userAction({commit}, data){
             localStorage.setItem('user', JSON.stringify(data))
             commit('setUser', data)
@@ -65,7 +85,8 @@ const store = createStore({
             const data = JSON.parse(localStorage.getItem('user'))
             commit('setUser', data)
         },
-        async connectWalletAction({commit}){
+        async connectWalletAction({commit, dispatch}, referrer){
+            const expectedChainId = 97
             const providerOptions = {
                 injected: {
                   display: {
@@ -78,7 +99,10 @@ const store = createStore({
                 walletconnect: {
                     package: WalletConnectProvider, // required
                     options: {
-                        infuraId: "8fa36a685e88497d93ae5945a92051ad", // required
+                        // infuraId: "8fa36a685e88497d93ae5945a92051ad", // required
+                        rpc: {
+                            97: "https://data-seed-prebsc-1-s1.binance.org:8545/"
+                        }
                     }
                 },
                 coinbasewallet: {
@@ -96,8 +120,8 @@ const store = createStore({
                     options: {
                     networkParams: {
                         host: "https://ropsten.infura.io/v3/7df6857af12b4aa6b61f8e4813690599", // optional
-                        chainId: 4, // optional
-                        networkId: 4 // optional
+                        chainId: expectedChainId, // optional
+                        networkId: expectedChainId // optional
                     },
                     config: {
                         buildEnv: "development" // optional
@@ -107,12 +131,10 @@ const store = createStore({
             }
 
             const web3modal = new Web3Modal({
-                network: "rinkeby",
-                cacheProvider: false,
+                // network: "Smart Chain - Testnet",
+                cacheProvider: true,
                 providerOptions,
             });
-
-            const expectedChainId = 4
 
             try {
                 const provider = await web3modal.connect();
@@ -122,13 +144,11 @@ const store = createStore({
                 if (chainId != expectedChainId) {
                     await web3.currentProvider.request({
                         method: 'wallet_switchEthereumChain',
-                        params: [{chainId: "0x4"}]
+                        params: [{chainId: "0x61"}]
                     })
                 }
 
                 let data = {}
-
-                console.log(web3)
 
                 const account = await web3.eth.getAccounts();
                 const balance = await web3.eth.getBalance(account[0]);
@@ -136,16 +156,50 @@ const store = createStore({
                 data.balance = parseFloat(ethBalance).toFixed(4);
                 data.network = await web3.eth.net.getNetworkType();
                 data.account = account[0]
+                data.web3 = web3
 
                 commit('setWeb3Data', data)
+
+                dispatch('authUserAction', {account, referrer})
 
             } catch (error) {
                 console.log(error)
                 alert(error)
             }
+        },
+        async buyTokensAction({state, commit}, amount){
+            const web3 = state.web3
+            const account = state.account
+            try {
+                const TokenSale = new web3.eth.Contract(NGLSALE.abi, '0x911B759279dce1751b404E03F1304Ccc652BcDa0');
+                const wei_amount = web3.utils.toWei(amount.toString(), 'ether')
+
+                commit('transactionStarted')
+
+                const tx = await TokenSale.methods.buyTokens(account).send({from: account, value: wei_amount, gas: 26000});
+
+                commit('transactionSuccessful')
+
+                console.log(tx)
+                
+            } catch (error) {
+                // alert(error)
+                commit('transactionError')
+                console.log(error)
+            }
+
         }
     },
     mutations: {
+        transactionSuccessful(state){
+            state.transactionStatus = 'success';
+        },
+        transactionStarted(state){
+            state.transactionStatus = 'started';
+        },
+        transactionError(state){
+            state.transactionStatus = 'error';
+        },
         setUser (state, data) {
             state.user = data
         },
@@ -153,7 +207,11 @@ const store = createStore({
             state.account = data.account;
             state.balance = data.balance;
             state.network = data.network;
+            state.web3 = data.web3;
             state.isConnected = true
+        },
+        setAuthUser(state, data){
+            state.authUser = data
         }
     },
     getters: {
@@ -161,12 +219,14 @@ const store = createStore({
         account: (state) => state.account,
         balance: (state) => state.balance,
         network: (state) => state.network,
-        isConnected: (state) => state.isConnected
+        isConnected: (state) => state.isConnected,
+        web3: (state) => state.web3,
+        authUser: (state) => state.authUser,
+        transactionStatus: (state) => state.transactionStatus
     }
 })
 
-
-app.use(web3)
+app.use(VueAxios, axios)
 app.use(store)
 app.mixin(mixing);
 app.mount('#app');

@@ -43,7 +43,7 @@
 import { telegramLoginTemp } from 'vue3-telegram-login'
 export default {
     name: "Airdrop",
-    mounted(){ console.log("telegram login", telegramLoginTemp) },
+    mounted(){},
     methods: {
         authenticateUser(user){
             console.log(user)

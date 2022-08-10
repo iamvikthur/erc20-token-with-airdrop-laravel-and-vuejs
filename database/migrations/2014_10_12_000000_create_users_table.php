@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('address');
-            $table->string('telegram_name')->unique();
-            $table->boolean('airdrop_sent')->default(false);
+            $table->text('bep20_address');
+            $table->string('referral')->unique();
+            $table->text('referred_by')->nullable();
+            $table->integer('referral_count')->default(0);
             $table->timestamps();
         });
     }

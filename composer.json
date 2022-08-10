@@ -9,6 +9,7 @@
         "defstudio/telegraph": "^1.15",
         "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
+        "haruncpi/laravel-id-generator": "^1.1",
         "innocenzi/laravel-vite": "^0.1.27",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",

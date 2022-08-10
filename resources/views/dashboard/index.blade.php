@@ -13,7 +13,7 @@
         </div>
         <div class="row">
             {{-- <token-sale-component></token-sale-component> --}}
-            <index-component></index-component>
+            <index-component :referrer={{isset($user) ? $user : null}}></index-component>
         </div>
     </div>
 
