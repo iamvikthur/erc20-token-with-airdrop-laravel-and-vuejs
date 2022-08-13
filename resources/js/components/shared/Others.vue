@@ -1,7 +1,7 @@
 <template>
     <div class="admin-data-content layout-top-spacing bg-white mx-3 rounded">
         <div class="mt-5 mb-5 pl-4">
-            <h4>NGL Token Updates</h4>
+            <h4>NGL Token Referrals</h4>
         </div>
         <div class="faq row px-3">
             <div class="col-lg-4 col-md-4 col-12 text-center">
@@ -49,13 +49,9 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
-    props: ['user'],
-    name: "index",
+    name: "OthersComponent",
 
-    mounted(){
-        // this.$store.dispatch('setReferrerAction', )
-        // this.$store.dispatch('connectWalletAction', this.$attrs.referrer, this.referrer)
-    },
+    mounted(){},
     computed: {
         ...mapGetters(['authUser'])
     }

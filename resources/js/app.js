@@ -32,12 +32,13 @@ const app = createApp({});
 import SidebarLeft from './components/shared/SidebarLeft.vue';
 import SidebarRight from './components/shared/SidebarRight.vue';
 import Summary from './components/Summary.vue';
-import TokenSale from './components/shared/TokenSale.vue';
+import TokenSale from './components/TokenSale.vue';
 import Nfts from './components/Nfts.vue'
 import Farm from './components/Farm.vue'
 import Airdrop from './components/Airdrop.vue'
 import Profile from './components/Profile.vue'
 import Index from "./components/Index.vue"
+import Others from "./components/shared/Others.vue"
 
 app.component('sidebar-left-component', SidebarLeft);
 app.component('sidebar-right-component', SidebarRight);
@@ -48,7 +49,7 @@ app.component('farm-component', Farm);
 app.component('airdrop-component', Airdrop);
 app.component('profile-component', Profile);
 app.component('index-component', Index);
-
+app.component('others-component', Others);
 
 
 // Create a new store instance.
