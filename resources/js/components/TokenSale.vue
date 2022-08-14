@@ -13,18 +13,18 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">BNB</span>
                     </div>
-                    <input placeholder="0" @keyup="calculateNGL($event)" v-model="bnb" type="number" class="form-control" aria-label="Amount (to the nearest dollar)">
+                    <input placeholder="0.00" min="0.1" max="10" @keyup="calculateNGL($event)" step="0.1" v-model="bnb" type="number" class="form-control">
                 </div>
 
                 <div class="input-group mb-4 col-12 col-xl-10 col-md-10 col-sm-12">
                     <div class="input-group-prepend">
-                        <span class="input-group-text">$NGL</span>
+                        <span class="input-group-text">NGL</span>
                     </div>
                     <input disabled type="text" :value="nglprice" class="form-control" aria-label="Amount (to the nearest dollar)">
                 </div>
 
                 <div class="input-group col-10">
-                    <p>IDO Sale price: 1BNB =  10,000 NGL</p>
+                    <p>IDO Sale price: 1BNB =  {{price}} NGL</p>
                 </div>
 
                 <div class="input-group justify-content-center">
@@ -47,6 +47,7 @@ export default {
             nglprice: 0
         }
     },
+    mounted(){},
     methods: {
         calculateNGL(e){
             console.log(e)
@@ -56,6 +57,28 @@ export default {
             this.$store.dispatch('connectWalletAction')
         },
         buyToken(){
+            if (this.bnb < 0.1 || this.bnb > 10) {
+
+                const text = this.bnb < 0.1 ? "Minimum BNB is 0.1" : "Maximum BNB is 10";
+
+                const toast = swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    padding: '2em'
+                });
+
+                toast({
+                    type: 'error',
+                    title: text,
+                    padding: '2em',
+                })
+
+                return
+
+            }
+            
             this.$store.dispatch('buyTokensAction', this.bnb)
         }
     },

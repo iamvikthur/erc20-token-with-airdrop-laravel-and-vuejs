@@ -36,7 +36,7 @@
                     </div>
 
                     <div class="input-group">
-                        <p class="text-white small">IDO Sale price: 1BNB =  10,000 NGL</p>
+                        <p class="text-white small">IDO Sale price: 1BNB =  {{price}} NGL</p>
                     </div>
 
                     <div class="input-group justify-content-center">
@@ -143,23 +143,21 @@ export default {
         ...mapGetters(['account', 'balance', 'network', 'isConnected', 'transactionStatus'])
     },
     watch: {
-        transactionStatus(val){
+        transactionStatus(statusObj){
+            console.log(statusObj)
+            const toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                padding: '2em'
+            });
 
-        console.log(val)
-
-        const toast = swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            padding: '2em'
-        });
-
-        toast({
-            type: 'success',
-            title: 'Transaction Submitted',
-            padding: '2em',
-        })
+            toast({
+                type: statusObj.type,
+                title: statusObj.text,
+                padding: '2em',
+            })
         }
     }
 }

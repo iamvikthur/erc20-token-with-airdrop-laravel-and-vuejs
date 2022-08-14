@@ -4,6 +4,7 @@
     Buy tokens
 @endsection
 
+
 @section('content')
     <div class="admin-data-content layout-top-spacing">
         <div class="row">
@@ -16,7 +17,14 @@
 @endsection
 
 @section('styles')
-    <link href="{{('dash/assets/css/elements/infobox.css')}}" rel="stylesheet" type="text/css" />
-    {{-- <link href="{{('dash/assets/css/pages/faq/faq2.css')}}" rel="stylesheet" type="text/css" />  --}}
+    <link href="{{asset('dash/assets/css/elements/infobox.css')}}" rel="stylesheet" type="text/css" />
+@endsection
+
+@section('script')
+    <!-- BEGIN THEME GLOBAL STYLE -->
+    <script src="{{asset('dash/assets/js/scrollspyNav.js')}}"></script>
+    <script src="{{asset('dash/plugins/sweetalerts/sweetalert2.min.js')}}"></script>
+    <script src="{{asset('dash/plugins/sweetalerts/custom-sweetalert.js')}}"></script>
+    <!-- END THEME GLOBAL STYLE -->  
 @endsection
 

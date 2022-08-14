@@ -64,7 +64,7 @@ const store = createStore({
         isConnected: false,
         web3: null,
         authUser: {},
-        transactionStatus: ''
+        transactionStatus: {type: null, text: null}
       }
     },
     actions: {
@@ -168,38 +168,52 @@ const store = createStore({
                 alert(error)
             }
         },
-        async buyTokensAction({state, commit}, amount){
+        async buyTokensAction({state, commit, dispatch}, amount){
             const web3 = state.web3
             const account = state.account
             try {
                 const TokenSale = new web3.eth.Contract(NGLSALE.abi, '0x911B759279dce1751b404E03F1304Ccc652BcDa0');
                 const wei_amount = web3.utils.toWei(amount.toString(), 'ether')
 
-                commit('transactionStarted')
-
-                const tx = await TokenSale.methods.buyTokens(account).send({from: account, value: wei_amount, gas: 26000});
+                const tx = await TokenSale.methods.buyTokens(account).send({from: account, value: wei_amount, gas: 3000000});
 
                 commit('transactionSuccessful')
+                dispatch('openSwalToastAction')
 
                 console.log(tx)
                 
             } catch (error) {
-                // alert(error)
                 commit('transactionError')
+                dispatch('openSwalToastAction')
                 console.log(error)
             }
 
+        },
+        openSwalToastAction({state}){
+            const toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                padding: '2em'
+            });
+
+            toast({
+                type: state.transactionStatus.type,
+                title: state.transactionStatus.text,
+                padding: '2em',
+            })
         }
+        
     },
     mutations: {
         transactionSuccessful(state){
-            state.transactionStatus = 'success';
-        },
-        transactionStarted(state){
-            state.transactionStatus = 'started';
+            state.transactionStatus.type = 'success';
+            state.transactionStatus.text = "Transaction successful";
         },
         transactionError(state){
-            state.transactionStatus = 'error';
+            state.transactionStatus.type = 'error';
+            state.transactionStatus.text = "transaction encountered and error";
         },
         setUser (state, data) {
             state.user = data

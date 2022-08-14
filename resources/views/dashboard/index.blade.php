@@ -21,5 +21,4 @@
 
 @section('styles')
     <link href="{{('dash/assets/css/elements/infobox.css')}}" rel="stylesheet" type="text/css" />
-    {{-- <link href="{{('dash/assets/css/pages/faq/faq2.css')}}" rel="stylesheet" type="text/css" />  --}}
 @endsection
