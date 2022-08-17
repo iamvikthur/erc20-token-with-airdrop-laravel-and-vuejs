@@ -19,4 +19,6 @@ Route::view('/profile', 'dashboard.profile')->name('profile');
 // post, get routes
 Route::post('/auth_user', [AppController::class, 'authUser']);
 Route::get('/home', [AppController::class, 'getReferrer']);
+Route::post('/airdrop', [AppController::class, 'saveAirdropUser']);
+Route::get('/check_airdrop/{user_id}', [AppController::class, 'checkAirdropStatus']);
 

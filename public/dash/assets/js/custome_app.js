@@ -276,29 +276,29 @@ var App = function() {
                 })
             }
         },
-        openSubmenuOnLoad: function() {
-            const getListMenu = document.querySelector('li.menu.active')
-            getChild = getListMenu.children;
-            var getHref;
-            for (let i = 0; i < getChild.length; i++) {
-                const element = getChild[i];
-                getHref = element.getAttribute('href');
-            }
-            if ( getHref != '#dashboard' && !(getListMenu.classList.contains('menu-single')) ) {
-                if( !(getListMenu.classList.contains('submenu-closed'))) {
+        // openSubmenuOnLoad: function() {
+        //     const getListMenu = document.querySelector('li.menu.active')
+        //     getChild = getListMenu.children;
+        //     var getHref;
+        //     for (let i = 0; i < getChild.length; i++) {
+        //         const element = getChild[i];
+        //         getHref = element.getAttribute('href');
+        //     }
+        //     if ( getHref != '#dashboard' && !(getListMenu.classList.contains('menu-single')) ) {
+        //         if( !(getListMenu.classList.contains('submenu-closed'))) {
 
-                    const selectSubmenu = document.querySelector(getHref);
-                    selectSubmenu.parentNode.classList.add('show');
-                    selectSubmenu.parentNode.classList.add('submenu-enable');
-                    selectSubmenu.classList.add('show');
+        //             const selectSubmenu = document.querySelector(getHref);
+        //             selectSubmenu.parentNode.classList.add('show');
+        //             selectSubmenu.parentNode.classList.add('submenu-enable');
+        //             selectSubmenu.classList.add('show');
         
-                    if ( window.innerWidth >= 1200 ) {
-                        document.querySelector('.sidebarCollapse').classList.add('bt-menu-open');
-                    }
-                }
+        //             if ( window.innerWidth >= 1200 ) {
+        //                 document.querySelector('.sidebarCollapse').classList.add('bt-menu-open');
+        //             }
+        //         }
                 
-            }
-        }
+        //     }
+        // }
     }
 
     var _mobileResolution = {
@@ -433,7 +433,7 @@ var App = function() {
                 inBuiltfunctionality.colRightContentScroll()
             }
 
-            inBuiltfunctionality.openSubmenuOnLoad();
+            // inBuiltfunctionality.openSubmenuOnLoad();
         }
     }
 

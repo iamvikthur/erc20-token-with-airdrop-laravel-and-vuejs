@@ -125,9 +125,9 @@
     <!-- END GLOBAL MANDATORY SCRIPTS -->
 
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
-    <script src="{{asset('dash/plugins/apex/apexcharts.min.js')}}"></script>
+    {{-- <script src="{{asset('dash/plugins/apex/apexcharts.min.js')}}"></script>
     <script src="{{asset('dash/assets/js/dashboard/dash_1.js')}}"></script>
-    <script src="{{asset('dash/assets/js/widgets/modules-widgets.js')}}"></script>
+    <script src="{{asset('dash/assets/js/widgets/modules-widgets.js')}}"></script> --}}
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
 
     @yield('script')

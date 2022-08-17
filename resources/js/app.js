@@ -57,17 +57,52 @@ const baseUrl = window.location.origin
 const store = createStore({
     state () {
       return {
-        user: {},
+        user: { referral_count: 0 },
         account: null,
         balance: null,
         network: null,
         isConnected: false,
         web3: null,
         authUser: {},
-        transactionStatus: {type: null, text: null}
+        transactionStatus: {type: null, text: null},
+        airdropDone: false,
+        NGLAccountBalance: 0
       }
     },
     actions: {
+        async getNGLAccountBalanceAction({state, commit}){
+            if (state.account) {
+                const web3 = state.web3
+                const account = state.account
+
+                try {
+                    const Token = new web3.eth.Contract(NGLTOKEN.abi, '0x7044Dff9fbe4539Caea989F5E08EFAafd40E8c5B');
+                    const bal = await Token.methods.balanceOf(account).call();
+
+                    const accountBalance = web3.utils.fromWei(bal)
+    
+                    commit('setUserNGLBalance', accountBalance)
+                    
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        },
+        checkIfUserHasDoneAirdropAction({commit}, userId){
+            axios.get(`${baseUrl}/check_airdrop/${userId}`)
+            .then(res => {
+                commit('userHasDoneAirdrop')
+            })
+        },
+        async saveAirdropUserAction({commit}, formdata){
+            axios.post(`${baseUrl}/airdrop`, formdata)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        },
         async authUserAction({commit}, obj){
             const fd = {
                 bep20_address: obj.account[0],
@@ -143,10 +178,31 @@ const store = createStore({
                 const chainId = await web3.eth.getChainId();
 
                 if (chainId != expectedChainId) {
-                    await web3.currentProvider.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{chainId: "0x61"}]
-                    })
+                    try {
+
+                        await web3.currentProvider.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{chainId: "0x61"}]
+                        })
+                        
+                    } catch (error) {
+                        if (error.code == 4902) {
+                            await web3.currentProvider.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [{
+                                    chainId: '0x61',
+                                    chainName: 'Binance Smart Chain - Testnet',
+                                    rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+                                    blockExplorerUrls: ['https://testnet.bscscan.com']
+                                }]
+                            })
+                            .catch((error) => {
+                                console.log(error)
+                            }) 
+                        }
+
+                    }
+
                 }
 
                 let data = {}
@@ -160,7 +216,7 @@ const store = createStore({
                 data.web3 = web3
 
                 commit('setWeb3Data', data)
-
+                dispatch('getNGLAccountBalanceAction')
                 dispatch('authUserAction', {account, referrer})
 
             } catch (error) {
@@ -213,7 +269,7 @@ const store = createStore({
         },
         transactionError(state){
             state.transactionStatus.type = 'error';
-            state.transactionStatus.text = "transaction encountered and error";
+            state.transactionStatus.text = "Transaction encountered an error";
         },
         setUser (state, data) {
             state.user = data
@@ -227,6 +283,12 @@ const store = createStore({
         },
         setAuthUser(state, data){
             state.authUser = data
+        },
+        userHasDoneAirdrop(state){
+            state.airdropDone = true
+        },
+        setUserNGLBalance(state, data){
+            state.NGLAccountBalance = new Intl.NumberFormat('ja-JP').format(data)
         }
     },
     getters: {
@@ -237,7 +299,9 @@ const store = createStore({
         isConnected: (state) => state.isConnected,
         web3: (state) => state.web3,
         authUser: (state) => state.authUser,
-        transactionStatus: (state) => state.transactionStatus
+        transactionStatus: (state) => state.transactionStatus,
+        airdropDone: (state) => state.airdropDone,
+        NGLAccountBalance: (state) => state.NGLAccountBalance,
     }
 })
 

@@ -1,17 +1,17 @@
 <template>
   <!-- Content -->
-    <div class="col-xl-5 col-lg-4 col-md-4 col-sm-12 layout-top-spacing">
+    <div class="col-xl-5 col-lg-4 col-md-4 col-sm-6 col-6 layout-top-spacing">
         <div class="user-profile layout-spacing">
             <div class="widget-content widget-content-area">
                 <div class="text-center user-info">
-                    <img style="max-width: 34%; box-shadow: none;" class="img-fluid" :src="user.photo_url || 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'" alt="avatar">
-                    <p class="text-capitalize">{{user.username}}</p>
+                    <img style="max-width: 34%; box-shadow: none;" class="img-fluid" :src="user != null ? user.photo_url : 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'" alt="avatar">
+                    <p class="text-capitalize">{{user ? user.username : ""}}</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="listGroupTask" class="col-lg-12 layout-spacing">
+    <div id="listGroupTask" class="col-lg-12 layout-spacing" v-if="!airdropDone">
         <div class="statbox widget box box-shadow">
             <div class="widget-header">
                 <div class="row">
@@ -39,7 +39,7 @@
                                 <input ref="group" type="checkbox" disabled class="new-control-input">
                                 <span class="new-control-indicator"></span>
                                 <span class="ml-2">
-                                    <a target="blank" class="text-info" href="https://t.me/thengltoken">Join ur telegram group</a>
+                                    <a target="blank" class="text-info" href="https://t.me/thengltokennews">Join ur telegram group</a>
                                 </span>
                                 <span @click.prevent="checkTelegramTask('group')" class="ml-3 d-block">
                                     <span class="badge badge-primary">Confirm</span>
@@ -50,7 +50,7 @@
                     <li class="list-group-item list-group-item-action mb-4">
                         <div class="n-chk">
                             <label class="new-control new-checkbox checkbox-primary w-100 justify-content-between">
-                                <input ref="channel" :checked="formdata.walletConnected" type="checkbox" disabled class="new-control-input">
+                                <input ref="channel" type="checkbox" disabled class="new-control-input">
                                 <span class="new-control-indicator"></span>
                                 <span class="ml-2">
                                     <a target="blank" class="text-info" href="https://t.me/thengltokennews">Join Our telegram channel</a>
@@ -91,43 +91,81 @@
                     </li>
                 </ul>
                 <div class="mt-4 text-center">
-                    <button v-if="tasksCompleted" @click="openSweetModal('info', 'Congratulations on completing your tasks, you will get your NGL tokens within 24 to 48 hours after proper confirmation')" class="btn btn-primary">I have completed all tasks</button>
-                    <button velse @click="openSweetModal('error', 'You must complete all tasks', 'Not Allowed')" class="btn btn-primary">I have completed all tasks</button>
+                    <button v-if="tasksCompleted" @click="saveAirdropUser()" class="btn btn-primary">I have completed all tasks</button>
+                    <button v-else @click="openSweetModal('error', 'You must complete all tasks', 'Not Allowed')" class="btn btn-primary">I have not completed all tasks</button>
                 </div>
             </div>
         </div>
     </div>
 
-
+    <div id="listGroupTask" class="col-lg-12 layout-spacing" v-else>
+        <div class="statbox widget box box-shadow">
+            <div class="widget-header">
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <h4>Airdrop Tasks</h4> 
+                    </div>                   
+                </div>
+            </div>
+            <div class="widget-content widget-content-area success">
+                <p class="alert alert-success">You have completed all your tasks</p>
+            </div>
+            <div class="widget-content widget-content-area">
+            <h4>Your Referral link</h4>
+            <input v-if="authUser.referral" type="text" class="form-control" :value="'http://127.0.0.1:8002/home?ref='+authUser.referral" />
+            <input v-else type="text" disabled class="form-control" value="Connect Wallet " />
+        </div>
+        </div>
+    </div>
 </template>
 
 <script>
-// import 'sweetalert2/dist/sweetalert2.min.css';
 import { mapGetters } from 'vuex'
 export default {
     name: "Profile",
     data(){
         return {
-            formdata: {twitterUsername: null, discordUsername: null, telGroup: null, telChannel: null, walletConnected: false}
+            formdata: { 
+                twitterUsername: null, 
+                discordUsername: null, 
+                telGroup: null, 
+                telChannel: null, 
+                walletConnected: false
+            },
+            airdropTasksCompleted: false,
         }
     },
     mounted(){
         this.$store.dispatch('setUserAction').then( (ins) => {
             if (!this.user) {
+                this.$store.dispatch('checkIfUserHasDoneAirdropAction', 2069983613)
                 // window.location.href = this.pathOrigin  + "/airdrop"
+            } else {
+                this.$store.dispatch('checkIfUserHasDoneAirdropAction', 2069983613 /*this.user.id */ );
             }
+            
         })
-
-        if (this.account) {
-            this.formdata.walletConnected = true
-        }
-
-
     },
     methods: {
+        saveAirdropUser(){
+            this.openSweetModal('success', 'Congratulations on completing your tasks, you will get your NGL tokens within 24 to 48 hours after proper confirmation');
+            let fd = {};
+
+            fd.telegram_id = 2069983613 //this.user.id
+            fd.bep20_address =  this.account;
+            fd.discord_username = this.formdata.discordUsername;
+            fd.telegram_name = "lauren Gooz" //this.user.first_name + ' ' + this.user.last_name;
+            fd.telegram_username = "laurengooz" //this.user.username;
+            fd.twitter_username = this.formdata.twitterUsername;
+
+            this.$store.dispatch('saveAirdropUserAction', fd);
+        },
         connectWallet(){
             this.$store.dispatch('connectWalletAction').then(() => {
-                this.$refs.wallet.checked = true
+                if (this.account) {
+                    this.formdata.walletConnected = true
+                    this.$refs.wallet.checked = true
+                }
             })
             
         },
@@ -160,11 +198,11 @@ export default {
             title: 'Enter your discord username',
             input: 'text',
             inputLabel: 'Your IP address',
-            inputPlaceholder: 'e.g @ngltoken',
+            inputPlaceholder: 'e.g @ngldiscordtoken',
             showCancelButton: true,
             inputValidator: (value) => {
                 if (!value) {
-                return 'Twitter username required'
+                return 'Discord username required'
                 }
             }
             })
@@ -193,7 +231,7 @@ export default {
                             const req = {
                                 chat_id: channel == 'group' ? '@thengltoken' : '@thengltokennews',
                             }
-                            const user_id = vue.user.id;
+                            const user_id = 2069983613;
                             const URL = `https://api.telegram.org/bot${Token}/getChatMember?chat_id=${req.chat_id}&user_id=${user_id}`;
                             var xmlHttp = new XMLHttpRequest();
                             xmlHttp.open(Method, URL, false);
@@ -241,7 +279,7 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(['user', 'account']),
+        ...mapGetters(['user', 'account', 'airdropDone', 'authUser']),
         tasksCompleted(){
             return (
                 this.formdata.twitterUsername !== null && 

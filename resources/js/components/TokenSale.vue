@@ -24,7 +24,13 @@
                 </div>
 
                 <div class="input-group col-10">
-                    <p>IDO Sale price: 1BNB =  {{price}} NGL</p>
+                    <p>IDO Sale Price: 1BNB =  {{price}} NGL</p>
+                </div>
+                <div class="input-group col-10">
+                    <p>Minimum Buy  0.1 BNB </p>
+                </div>
+                <div class="input-group col-10">
+                    <p>Maximum Buy 10 BNB </p>
                 </div>
 
                 <div class="input-group justify-content-center">

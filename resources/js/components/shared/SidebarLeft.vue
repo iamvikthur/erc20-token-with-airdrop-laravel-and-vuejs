@@ -73,8 +73,67 @@
             </nav>
 
             <div id="compact_submenuSidebar" class="submenu-sidebar">
-                <div class="submenu">
+
+                <div class="submenu" id="dashboard">
+                    <ul class="submenu-list menu-block-submenu" data-parent-element="#dashboard"> 
+                        <li class="menu-block">
+                            <a href="index.html"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-pie-chart"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg> Analytics </a>
+                        </li>
+                        <li class="menu-block">
+                            <a href="index2.html"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg> Sales </a>
+                        </li>
+                    </ul>
                 </div>
+
+
+                                <div class="submenu" id="tables">
+                    <ul class="submenu-list" data-parent-element="#tables">
+                        <li>
+                            <a href="table_basic.html"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"></circle><line x1="1.05" y1="12" x2="7" y2="12"></line><line x1="17.01" y1="12" x2="22.96" y2="12"></line></svg></span> Basic Tables</a>
+                        </li>
+                        <li class="sub-submenu">
+                            <a role="menu" class="collapsed" data-toggle="collapse" data-target="#datatables" aria-expanded="true"><div><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></span> Datatables</div> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg> </a>
+                            <ul id="datatables" class="collapse show" data-parent="#compact_submenuSidebar">
+                                <li>
+                                    <a href="table_dt_basic.html"> Basic </a>
+                                </li>
+                                <li>
+                                    <a href="table_dt_striped_table.html"> Striped Table </a>
+                                </li>
+                                <li>
+                                    <a href="table_dt_ordering_sorting.html"> Order Sorting </a>
+                                </li>
+                                <li>
+                                    <a href="table_dt_multi-column_ordering.html"> Multi-Column </a>
+                                </li>
+                                <li>
+                                    <a href="table_dt_multiple_tables.html"> Multiple Tables</a>
+                                </li>
+                                <li>
+                                    <a href="table_dt_alternative_pagination.html"> Alt. Pagination</a>
+                                </li>
+                                <li>
+                                    <a href="table_dt_custom.html"> Custom </a>
+                                </li>
+                                <li>
+                                    <a href="table_dt_range_search.html"> Range Search </a>
+                                </li>
+                                <li>
+                                    <a href="table_dt_html5.html"> HTML5 Export </a>
+                                </li>
+                                <li>
+                                    <a href="table_dt_live_dom_ordering.html"> Live DOM ordering </a>
+                                </li>
+                                <li>
+                                    <a href="table_dt_miscellaneous.html"> Miscellaneous </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                
+                
             </div>
         </div>
         <!--  END SIDEBAR  -->

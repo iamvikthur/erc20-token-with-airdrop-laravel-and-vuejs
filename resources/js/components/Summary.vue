@@ -13,7 +13,7 @@
                             </div>
                             <div class="w-summary-details">
                                 <div class="w-summary-info">
-                                    <h6>Wallet Balance <span class="summary-count">92,600 NGL </span></h6>
+                                    <h6>Wallet Balance <span class="summary-count">{{ NGLAccountBalance }} NGL </span></h6>
                                 </div>
                             </div>
                         </div>
@@ -25,7 +25,7 @@
                             </div>
                             <div class="w-summary-details">
                                 <div class="w-summary-info">
-                                    <h6>Total Rewards <span class="summary-count">37,51 NGL</span></h6>
+                                    <h6>Total Rewards <span class="summary-count">{{getNGLRewards()}} NGL</span></h6>
                                 </div>
                             </div>
                         </div>
@@ -37,7 +37,7 @@
                             </div>
                             <div class="w-summary-details">
                                 <div class="w-summary-info">
-                                    <h6>Total Invites <span class="summary-count">10</span></h6>
+                                    <h6>Total Invites <span class="summary-count">{{ user.referral_count }}</span></h6>
                                 </div>
                             </div>
                         </div>
@@ -49,8 +49,27 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
-    name: "Summary"
+    name: "Summary",
+    mounted(){
+        this.$store.dispatch('getNGLAccountBalanceAction')
+    },
+    methods: {
+        getNGLAccountBalance(){
+            if (this.account) {
+                return 
+            }
+
+            return 0
+        },
+        getNGLRewards(){
+            return 0
+        }
+    },
+    computed: {
+        ...mapGetters(['user', 'account', 'NGLAccountBalance']),
+    }
 }
 </script>
 
