@@ -108,7 +108,7 @@ const store = createStore({
                 bep20_address: obj.account[0],
                 referrer: obj.referrer
             }
-            const res = await axios.post(`${baseUrl}/auth_user/`, fd)
+            const res = await axios.post(`${baseUrl}/auth_user`, fd)
             const data = await res.data;
             console.log("this is the user data", data);
             commit('setAuthUser', data)

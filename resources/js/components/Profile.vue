@@ -138,10 +138,9 @@ export default {
     mounted(){
         this.$store.dispatch('setUserAction').then( (ins) => {
             if (!this.user) {
-                this.$store.dispatch('checkIfUserHasDoneAirdropAction', 2069983613)
-                // window.location.href = this.pathOrigin  + "/airdrop"
+                window.location.href = this.pathOrigin  + "/airdrop"
             } else {
-                this.$store.dispatch('checkIfUserHasDoneAirdropAction', 2069983613 /*this.user.id */ );
+                this.$store.dispatch('checkIfUserHasDoneAirdropAction', this.user.id /* 2069983613 */ );
             }
             
         })
@@ -151,11 +150,11 @@ export default {
             this.openSweetModal('success', 'Congratulations on completing your tasks, you will get your NGL tokens within 24 to 48 hours after proper confirmation');
             let fd = {};
 
-            fd.telegram_id = 2069983613 //this.user.id
+            fd.telegram_id = this.user.id // 2069983613 
             fd.bep20_address =  this.account;
             fd.discord_username = this.formdata.discordUsername;
-            fd.telegram_name = "lauren Gooz" //this.user.first_name + ' ' + this.user.last_name;
-            fd.telegram_username = "laurengooz" //this.user.username;
+            fd.telegram_name = this.user.first_name + ' ' + this.user.last_name; // "lauren Gooz"
+            fd.telegram_username = this.user.username; //"laurengooz" 
             fd.twitter_username = this.formdata.twitterUsername;
 
             this.$store.dispatch('saveAirdropUserAction', fd);
