@@ -70,6 +70,35 @@ const store = createStore({
       }
     },
     actions: {
+        async checkWeb3ConnectionAction({commit, dispatch}){
+            const provider = window.ethereum
+
+            if (provider) {
+                const accounts = await provider.request({
+                    method: 'eth_accounts'
+                })
+                if (accounts.length) {
+                    const web3 =  new Web3(provider)
+                    const balance = await web3.eth.getBalance(accounts[0]);
+                    const ethBalance = web3.utils.fromWei(balance, "ether");
+
+                    const data = {
+                        account: accounts[0],
+                        web3,
+                        balance: parseFloat(ethBalance).toFixed(4)
+                    }
+                    commit('setWeb3Data', data)
+                    dispatch('getNGLAccountBalanceAction')
+                    dispatch('authUserAction', {account: accounts[0], referrer: null })
+
+                    console.log(accounts[0])
+                } else {
+                    console.log("!!! SITE NOT CONNECTED")
+                }
+            } else {
+                console.log("!!! METAMASK NOT CONNECTED !!!")
+            }
+        },
         async getNGLAccountBalanceAction({state, commit}){
             if (state.account) {
                 const web3 = state.web3
@@ -97,6 +126,7 @@ const store = createStore({
         async saveAirdropUserAction({commit}, formdata){
             axios.post(`${baseUrl}/airdrop`, formdata)
             .then(res => {
+                commit('userHasDoneAirdrop')
                 console.log(res)
             })
             .catch(error => {

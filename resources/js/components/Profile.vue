@@ -25,7 +25,7 @@
                     <li class="list-group-item list-group-item-action mb-4">
                         <div class="n-chk">
                             <label class="new-control new-checkbox checkbox-primary w-100 justify-content-between">
-                                <input ref="wallet" type="checkbox" disabled class="new-control-input">
+                                <input :checked="isConnected" ref="wallet" type="checkbox" disabled class="new-control-input">
                                 <span class="new-control-indicator"></span>
                                 <span class="ml-2">
                                     <a target="blank" @click.prevent="connectWallet()" class="text-info" href="#">Connect Wallet</a>
@@ -39,9 +39,9 @@
                                 <input ref="group" type="checkbox" disabled class="new-control-input">
                                 <span class="new-control-indicator"></span>
                                 <span class="ml-2">
-                                    <a target="blank" class="text-info" href="https://t.me/thengltokennews">Join ur telegram group</a>
+                                    <a target="blank" @click.prevent="openLink('https://t.me/thengltokennews', 'group')" class="text-info" href="#">Join our telegram group</a>
                                 </span>
-                                <span @click.prevent="checkTelegramTask('group')" class="ml-3 d-block">
+                                <span v-if="page.group" @click.prevent="checkTelegramTask('group')" class="ml-3 d-block">
                                     <span class="badge badge-primary">Confirm</span>
                                 </span>
                             </label>
@@ -53,9 +53,9 @@
                                 <input ref="channel" type="checkbox" disabled class="new-control-input">
                                 <span class="new-control-indicator"></span>
                                 <span class="ml-2">
-                                    <a target="blank" class="text-info" href="https://t.me/thengltokennews">Join Our telegram channel</a>
+                                    <a target="blank" class="text-info" @click.prevent="openLink('https://t.me/thengltokennews', 'channel')" href="#">Join our telegram channel</a>
                                 </span>
-                                <span @click.prevent="checkTelegramTask('channel')" class="ml-3 d-block">
+                                <span v-if="page.channel" @click.prevent="checkTelegramTask('channel')" class="ml-3 d-block">
                                     <span class="badge badge-primary">Confirm</span>
                                 </span>
                             </label>
@@ -67,9 +67,9 @@
                                 <input ref="twitter" type="checkbox" disabled class="new-control-input">
                                 <span class="new-control-indicator"></span>
                                     <span class="ml-2">
-                                        <a target="blank" class="text-info" href="http://twitter.com">Follow our twitter handle and retweet pinned tweet</a>
+                                        <a target="blank" class="text-info" @click.prevent="openLink('http://twitter.com', 'twitter')" href="#">Follow our twitter handle and retweet pinned tweet</a>
                                     </span>
-                                    <span @click.prevent="checkTwitterTask('twitter')" class="ml-3 d-block">
+                                    <span v-if="page.twitter" @click.prevent="checkTwitterTask('twitter')" class="ml-3 d-block">
                                         <span class="badge badge-primary">Confirm</span>
                                     </span>
                             </label>
@@ -81,9 +81,9 @@
                                 <input ref="discord" type="checkbox" disabled class="new-control-input">
                                 <span class="new-control-indicator"></span>
                                     <span class="ml-2">
-                                        <a target="blank" class="text-info" href="http://discord.com">Join our discord server</a>
+                                        <a target="blank" class="text-info" @click.prevent="openLink('http://discord.com', 'discord')" href="#">Join our discord server</a>
                                     </span>
-                                    <span @click.prevent="checkDiscordTask('discord')" class="ml-3 d-block">
+                                    <span v-if="page.discord" @click.prevent="checkDiscordTask('discord')" class="ml-3 d-block">
                                         <span class="badge badge-primary">Confirm</span>
                                     </span>
                             </label>
@@ -112,7 +112,7 @@
             </div>
             <div class="widget-content widget-content-area">
             <h4>Your Referral link</h4>
-            <input v-if="authUser.referral" type="text" class="form-control" :value="'http://127.0.0.1:8002/home?ref='+authUser.referral" />
+            <input v-if="authUser.referral" type="text" class="form-control" :value="pathOrigin +'/home?ref='+authUser.referral" />
             <input v-else type="text" disabled class="form-control" value="Connect Wallet " />
         </div>
         </div>
@@ -125,14 +125,20 @@ export default {
     name: "Profile",
     data(){
         return {
-            formdata: { 
-                twitterUsername: null, 
-                discordUsername: null, 
-                telGroup: null, 
-                telChannel: null, 
+            formdata: {
+                twitterUsername: null,
+                discordUsername: null,
+                telGroup: null,
+                telChannel: null,
                 walletConnected: false
             },
             airdropTasksCompleted: false,
+            page: {
+                group: false,
+                channel: false,
+                twitter: false,
+                discord: false
+            }
         }
     },
     mounted(){
@@ -142,10 +148,13 @@ export default {
             } else {
                 this.$store.dispatch('checkIfUserHasDoneAirdropAction', this.user.id /* 2069983613 */ );
             }
-            
         })
     },
     methods: {
+        openLink(link, info){
+            this.page[info] = true
+            window.open(link, '_blank')
+        },
         saveAirdropUser(){
             this.openSweetModal('success', 'Congratulations on completing your tasks, you will get your NGL tokens within 24 to 48 hours after proper confirmation');
             let fd = {};
@@ -169,7 +178,6 @@ export default {
             
         },
         async checkTwitterTask(){
-
             const { value: twitterUsername } = await swal.fire({
             title: 'Enter your twitter username',
             input: 'text',
@@ -189,8 +197,6 @@ export default {
                 this.$refs.twitter.checked = true
                 swal.fire({text: `Your twitter username is ${twitterUsername}`, type: 'success'})
             }
-
-            
         },
         async checkDiscordTask(){
             const { value: discordUsername } = await swal.fire({
@@ -266,9 +272,10 @@ export default {
             })
 
         },
-        openSweetModal(type, message, title =  'Great'){
+        openSweetModal(type, message, title){
+            const r_title = title || type == 'error' ? "Error" : "Great"
             swal({
-                title: title,
+                title: r_title,
                 text: message,
                 type: type,
                 showCancelButton: false,
@@ -278,7 +285,7 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(['user', 'account', 'airdropDone', 'authUser']),
+        ...mapGetters(['user', 'account', 'airdropDone', 'authUser', 'isConnected']),
         tasksCompleted(){
             return (
                 this.formdata.twitterUsername !== null && 

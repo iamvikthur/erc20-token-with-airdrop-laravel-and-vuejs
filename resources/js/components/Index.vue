@@ -53,7 +53,7 @@ export default {
     name: "index",
 
     mounted(){
-        // this.$store.dispatch('setReferrerAction', )
+        this.$store.dispatch('checkWeb3ConnectionAction')
         // this.$store.dispatch('connectWalletAction', this.$attrs.referrer, this.referrer)
     },
     computed: {
