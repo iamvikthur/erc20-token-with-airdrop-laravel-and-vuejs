@@ -96,7 +96,7 @@ const store = createStore({
                     console.log("!!! SITE NOT CONNECTED")
                 }
             } else {
-                console.log("!!! METAMASK NOT CONNECTED !!!")
+                console.log("!!! METAMASK NOT INSTALLED !!!")
             }
         },
         async getNGLAccountBalanceAction({state, commit}){
